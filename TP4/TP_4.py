@@ -1,3 +1,50 @@
+class Maquina_Turing:
+    def __init__(self):
+        self.estados = {'q0', 'q1'}
+        self.alfabeto_entrada = {'x', 'y', 'B'}
+        self.alfabeto_cinta = {'x', 'y', 'B'}
+        self.estado_inicial = 'q0'
+        self.estado_aceptacion = 'q1'
+        self.estado_rechazo = 'q_rechazo'
+        self.transiciones = {
+            ('q0', 'x'): ('q1', 'x', 'R'),
+            ('q1', 'x'): ('q1', 'x', 'R'),
+            ('q1', 'y'): ('q1', 'y', 'R')
+        }
+
+    def ejecutar(self, cadena):
+        cinta = list(cadena)
+        cinta.append('B')
+        estado_actual = self.estado_inicial
+        cabeza = 0
+
+        while estado_actual != self.estado_aceptacion and estado_actual != self.estado_rechazo:
+            if (estado_actual, cinta[cabeza]) in self.transiciones:
+                estado_siguiente, simbolo_escrito, movimiento = self.transiciones[(estado_actual, cinta[cabeza])]
+                cinta[cabeza] = simbolo_escrito
+
+                if movimiento == 'R':
+                    cabeza += 1
+                elif movimiento == 'L':
+                    cabeza -= 1
+
+                estado_actual = estado_siguiente
+            else:
+                estado_actual = self.estado_rechazo
+
+        return estado_actual == self.estado_aceptacion
+
+
+# Ejemplo de uso
+mt = Maquina_Turing()
+
+cadena = 'xyxyyx'
+resultado = mt.ejecutar(cadena)
+print(f'La cadena "{cadena}" es {"válida" if resultado else "inválida"}')
+
+
+
+
 class TuringMachine:
     def __init__(self):
         self.estados = {'S', 'A', 'B', 'C', 'R'}
