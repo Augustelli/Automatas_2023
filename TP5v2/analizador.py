@@ -62,3 +62,4 @@ for index, registro in enumerate(data_frame.iterrows()):
 # Mostrar los primeros 100 registros válidos
 primeros_registros_validos = registros_validos.head(100)
 print(primeros_registros_validos)
+###
