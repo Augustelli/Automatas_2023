@@ -3,93 +3,124 @@ def validacion_fecha(fecha):
     patron = re.compile(r'^(0[1-9]|[1-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])(\/|-)\d{4}$')
    
     if patron.match(fecha):
-        print('La fecha ingresada es correcta')
+        # print('La fecha ingresada es correcta')
+        return True
     else:
-        print('La fecha ingresada es incorrecta')
+        # print('La fecha ingresada es incorrecta')
+        return False
 
 def validacion_id(id):
     patron= re.compile(r'^\d{6,7}$')
     if patron.match(id):
-        print('El id ingresado es correcto')
+        # print('El id ingresado es correcto')
+        return True
     else:
-        print('El id ingresado es incorrecto')
+        # print('El id ingresado es incorrecto')
+        return False
 
 def validacion_id_sesion(id_sesion):
     patron= re.compile(r'^[A-F0-9]{8}-[A-F0-9]{8}$')
     if patron.match(id_sesion):
-        print('El id de sesion ingresado es correcto')
+        # print('El id de sesion ingresado es correcto')
+        return True
+    
     else:
-        print('El id de sesion ingresado es incorrecto')
+        # print('El id de sesion ingresado es incorrecto')
+        return False
 
 def validacion_id_conexion_unico(id_conexion_unico):
     patron= re.compile(r'^[a-f0-9]{16}$')
     if patron.match(id_conexion_unico):
-        print('El id de conexion unico ingresado es correcto')
+        # print('El id de conexion unico ingresado es correcto')
+        return True
     else:
-        print('El id de conexion unico ingresado es incorrecto')
+        # print('El id de conexion unico ingresado es incorrecto')
+        return False
 
 def validacion_usuario(usuario):
-    patron= re.compile(r'^[a-zA-Z-]{8,25}$')
+    # patron= re.compile(r'^[a-zA-Z-]{8,24}[-]?$')
+    patron= re.compile(r'[-a-zA-Z]{3,24}')
     if patron.match(usuario):
-        print('El usuario ingresado es correcto')
+        # print('El usuario ingresado es correcto')
+        return True
     else:
-        print('El usuario ingresado es incorrecto')
+        # print('El usuario ingresado es incorrecto')
+        return False
 
 def validacion_ip_nas_ap(ip_nas_ap):
-    patron= re.compile(r'^192\.168\.274\.[0-9]{2}$')
+    patron= re.compile(r'^192\.168\.247\.[0-9]{2}$')
     if patron.match(ip_nas_ap):
-        print('La ip nas ap ingresada es correcta')
+        # print('La ip nas ap ingresada es correcta')
+        return True
     else:
-        print('La ip nas ap ingresada es incorrecta')
+        # print('La ip nas ap ingresada es incorrecta')
+        return False
+    
 
 def validacion_inicio_de_conexion_dia(inicio_de_conexion_dia):
     patron= re.compile(r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
     if patron.match(inicio_de_conexion_dia):
-        print('El inicio de conexion dia ingresado es correcto')
-    else:
-        print('El inicio de conexion dia ingresado es incorrecto')
+        # print('El inicio de conexion dia ingresado es correcto')
+        return True
     
+    else:
+        # print('El inicio de conexion dia ingresado es incorrecto')
+        return False
 def validacion_inicio_de_conexion_hora(inicio_de_conexion_hora):
     patron= re.compile(r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$')
     if patron.match(inicio_de_conexion_hora):
-        print('El inicio de conexion hora ingresado es correcto')
+        # print('El inicio de conexion hora ingresado es correcto')
+        return True
     else:
-        print('El inicio de conexion hora ingresado es incorrecto')
+        # print('El inicio de conexion hora ingresado es incorrecto')
+        return False
 
 def validacion_fin_de_conexion_dia(fin_de_conexion_dia):
     patron= re.compile(r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
     if patron.match(fin_de_conexion_dia):
-        print('El fin de conexion dia ingresado es correcto')
+        # print('El fin de conexion dia ingresado es correcto')
+        return True
     else:
-        print('El fin de conexion dia ingresado es incorrecto')
+        # print('El fin de conexion dia ingresado es incorrecto')
+        return False
+    
 
 def validacion_fin_de_conexion_hora(fin_de_conexion_hora):
     patron= re.compile(r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$')
     if patron.match(fin_de_conexion_hora):
-        print('El fin de conexion hora ingresado es correcto')
+        # print('El fin de conexion hora ingresado es correcto')
+        return True
     else:
-        print('El fin de conexion hora ingresado es incorrecto')
+        # print('El fin de conexion hora ingresado es incorrecto')
+        return False
 
 def validacion_session_time(session_time):
     patron= re.compile(r'^\d+(\.\d+)?$')
     if patron.match(session_time):
-        print('El session time ingresado es correcto')
+        # print('El session time ingresado es correcto')
+        return True
     else:
-        print('El session time ingresado es incorrecto')
+        # print('El session time ingresado es incorrecto')
+        return False
 
 def validacion_mac_ap(mac_ap):
     patron= re.compile(r'^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}:HCDD$')
     if patron.match(mac_ap):
-        print('La mac ap ingresada es correcta')
+        # print('La mac ap ingresada es correcta')
+        return True
     else:
-        print('La mac ap ingresada es incorrecta')
+        # print('La mac ap ingresada es incorrecta')
+        return  False
+    
 
 def validacion_mac_cliente(mac_cliente):
     patron= re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
     if patron.match(mac_cliente):
-        print('La mac cliente ingresada es correcta')
+        # print('La mac cliente ingresada es correcta')
+        return True
     else:
-        print('La mac cliente ingresada es incorrecta')
+        # print('La mac cliente ingresada es incorrecta')
+        return False
 
 
 # if opcion == 1:
@@ -135,14 +166,15 @@ def validacion_mac_cliente(mac_cliente):
 #     # mac_cliente = input('Ingrese una mac cliente (00:00:00:00:00:00): ')
 #     verificacion=validacion_mac_cliente(mac_cliente)
 # else:
-#     print('La opcion ingresada no es correcta')
+# #     print('La opcion ingresada no es correcta')
 
 
 validacion_id('603877')
 validacion_id_sesion('5AA0184E-000001CA')
 validacion_id_conexion_unico('d6104707df0cd315')
-validacion_usuario('invitado-deca')
-validacion_usuario('lalbul-crndu')
+# validacion_usuario('invitado-deca')
+# validacion_usuario('lalbul-crndu')
+validacion_usuario('rezle-')
 validacion_ip_nas_ap('192.168.274.11')
 validacion_inicio_de_conexion_dia('2019-02-07')
 validacion_inicio_de_conexion_hora('19:46:08')
