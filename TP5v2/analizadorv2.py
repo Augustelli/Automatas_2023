@@ -22,6 +22,38 @@ for columna, patron in expresiones_regulares.items():
 
 print(data_filter)
 
+# def last_conection(data_filter):
+#     # try:
+#     #     patron_start=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+#     #     patron_end=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+
+#         # date_start=patron_start.match(input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): '))
+
+#         # date_end=patron_end.match(input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): '))
+
+#         date_start=input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
+#         date_end=input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
+
+   
+
+#         #i want to print the all  users that the last connection date was between the date_start and date_end
+#         (data_filter[(data_filter['Inicio_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)])
+
+#         print(data_filter[['Usuario','FIN_de_Conexión_Dia']])
+
+#     # except:
+#     #     print('Error en el formato de la fecha')
+#     #     exit()
+
+
+
+# last_conection(data_filter)
+
+
+
+
+
+
 
 
 
