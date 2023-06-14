@@ -38,17 +38,37 @@ def last_conection(data_filter):
         date_end='2019-03-02'
 
         # data_filter[(data_filter['Inicio_de_Conexión_Dia']>= date_start) &(data_filter['FIN_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
-        data_filter=data_filter[(data_filter['Inicio_de_Conexión_Dia']>= date_start)  & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
+        # data_filter=data_filter[(data_filter['Inicio_de_Conexión_Dia']>= date_start)  & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
+        data_filter=data_filter[(data_filter['FIN_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
 
         print(data_filter[['Usuario','FIN_de_Conexión_Dia']])
+
+
+
+   
 
     # except:
     #     print('Error en el formato de la fecha')
     #     exit()
 
+def export():
+    rta=input('Desea exportar los datos? (Y/N):')
+    if rta=='Y' or rta=='y':
+            rta1=input('Desea exportar los datos en formato CSV o Excel? (CSV/Excel):')
+            if rta1=='CSV' or rta1=='csv':
+         
+                ruta_csv='./TP5v2/export/last_conection.csv'
+                data_filter.to_csv(ruta_csv, index=False)
+            if rta1=='Excel' or rta1=='excel':
 
+                ruta_excel='./TP5v2/export/last_conection.xlsx'
+                data_filter.to_excel(ruta_excel, index=False)
+    else:
+        print('Gracias por usar el programa')
 
 last_conection(data_filter)
+export()
+
 
 
 
