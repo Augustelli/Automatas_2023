@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from multiprocessing import Pool
+import tabulate
 
 # Expresiones regulares para cada columna
 expresiones_regulares = {
@@ -8,24 +9,35 @@ expresiones_regulares = {
     'ID_Sesion': r'^[A-F0-9]{8}-[A-F0-9]{8}$',
     'ID_Conexión_unico': r'^[a-f0-9]{16}$',
     'Usuario': r'^[a-zA-Z-]{3,25}$',
-    'IP_NAS_AP': r'^192\.168\.274\.[0-9]{2}$',
+    'IP_NAS_AP': r'^192\.168\.247\.[0-9]{2}$',
     'Inicio_de_Conexión_Dia': r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$',
     'Inicio_de_Conexión_Hora': r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$',
     'FIN_de_Conexión_Dia': r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$',
     'FIN_de_Conexión_Hora': r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$',
-    'Session_Time': r'^\d+(\.\d+)?$',
-    'MAC_AP':  r'^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}:HCDD$',
-    'MAC_Cliente': r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
+    'Session_Time': r'^\d+(\.\d+)?$'
+    # 'MAC_AP':  r'^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}:HCDD$',
+    # 'MAC_Cliente': r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
 }
+
+def table():
+    table=[[f'{key}',f'{value}'] for key,value in expresiones_regulares.items()]
+    headers=['Columna','Expresión Regular']
+    table_final=tabulate(table,headers,tablefmt='fancy_grid')
+    print(table_final)
+
 
 
 # Cargar el archivo CSV como un DataFrame en Pandas utilizando multiprocessing
 def cargar_csv(path):
-    return pd.read_csv(path)
+    data=pd.read_csv(path,low_memory=False,usecols=expresiones_regulares.keys())
+    
+    return data
+
+
 
 
 # Ruta y nombre de tu archivo CSV
-csv_file = 'export-2019-to-now-v4.csv'
+csv_file = './TP5v2/file/export-2019-to-now-v4.csv'
 
 # Cargar el archivo CSV utilizando multiprocessing
 with Pool() as pool:
