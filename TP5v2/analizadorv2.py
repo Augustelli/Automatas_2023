@@ -24,50 +24,56 @@ for columna, patron in expresiones_regulares.items():
 
 def last_conection(data_filter):
     # try:
-    #     patron_start=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
-    #     patron_end=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+        date_start='2019-01-01'
+        date_end='2019-05-02'
 
-        # date_start=patron_start.match(input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): '))
-
-        # date_end=patron_end.match(input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): '))
 
         # date_start=input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
         # date_end=input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
 
-        date_start='2019-01-01'
-        date_end='2019-03-02'
+
+
+        patron_start=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+        patron_end=re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+
+        if patron_start.match(date_start) and patron_end.match(date_end):
+            print('Fecha de inicio y fin correctas')
 
         # data_filter[(data_filter['Inicio_de_Conexión_Dia']>= date_start) &(data_filter['FIN_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
         # data_filter=data_filter[(data_filter['Inicio_de_Conexión_Dia']>= date_start)  & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
-        data_filter=data_filter[(data_filter['FIN_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
+            data_filter=data_filter[(data_filter['FIN_de_Conexión_Dia'] >= date_start) & (data_filter['FIN_de_Conexión_Dia'] <= date_end)]
 
-        print(data_filter[['Usuario','FIN_de_Conexión_Dia']])
+            data_filter_finally=(data_filter[['ID','ID_Sesion','Usuario','FIN_de_Conexión_Dia']])
+            print(data_filter_finally)
+            export(data_filter_finally)
+        else:
+            print('Fecha de inicio y/o fin incorrectas')
 
 
 
    
 
-    # except:
-    #     print('Error en el formato de la fecha')
-    #     exit()
+    # except Exception as e:
+    #     # Bloque de código para manejar cualquier otra excepción no capturada explícitamente
+    #     print("Error:", str(e))
 
-def export():
+def export(data_filter_finally):
     rta=input('Desea exportar los datos? (Y/N):')
     if rta=='Y' or rta=='y':
             rta1=input('Desea exportar los datos en formato CSV o Excel? (CSV/Excel):')
             if rta1=='CSV' or rta1=='csv':
          
                 ruta_csv='./TP5v2/export/last_conection.csv'
-                data_filter.to_csv(ruta_csv, index=False)
+                data_filter_finally.to_csv(ruta_csv, index=False)
             if rta1=='Excel' or rta1=='excel':
 
                 ruta_excel='./TP5v2/export/last_conection.xlsx'
-                data_filter.to_excel(ruta_excel, index=False)
+                data_filter_finally.to_excel(ruta_excel, index=False)
     else:
         print('Gracias por usar el programa')
 
 last_conection(data_filter)
-export()
+
 
 
 
