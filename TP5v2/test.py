@@ -35,6 +35,11 @@ class TestPrueba(unittest.TestCase):
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-04-01'), True)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-04-02'), True)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-05-14'), True)
+        self.assertEqual(validacion_inicio_de_conexion_dia('2019/04-02'), False)
+        self.assertEqual(validacion_inicio_de_conexion_dia('2019\05\14'), False)
+        self.assertEqual(validacion_inicio_de_conexion_dia('2019/04/31'), False)
+
+
 
     def test_inicio_de_conexion_hora(self):
         self.assertEqual(validacion_inicio_de_conexion_hora('10:14:57'), True)
@@ -45,6 +50,9 @@ class TestPrueba(unittest.TestCase):
         self.assertEqual(validacion_fin_de_conexion_dia('2019-03-14'), True)
         self.assertEqual(validacion_fin_de_conexion_dia('2019-03-28'), True)
         self.assertEqual(validacion_fin_de_conexion_dia('2020-02-28'), True)
+        self.assertEqual(validacion_fin_de_conexion_dia('2019/04-02'), False)
+        self.assertEqual(validacion_fin_de_conexion_dia('2019\05\14'), False)
+        self.assertEqual(validacion_fin_de_conexion_dia('2019/04/31'), False)
 
     def test_fin_de_conexion_hora(self):
         self.assertEqual(validacion_fin_de_conexion_hora('10:15:34'), True)

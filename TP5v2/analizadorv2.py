@@ -24,12 +24,12 @@ for columna, patron in expresiones_regulares.items():
 
 def last_conection(data_filter):
     # try:
-        date_start='2019-01-01'
-        date_end='2019-05-02'
+        # date_start='2019-01-01'
+        # date_end='2019-05-02'
 
 
-        # date_start=input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
-        # date_end=input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
+        date_start=input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
+        date_end=input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
 
 
 
@@ -48,6 +48,7 @@ def last_conection(data_filter):
             export(data_filter_finally)
         else:
             print('Fecha de inicio y/o fin incorrectas')
+            last_conection(data_filter)
 
 
 
