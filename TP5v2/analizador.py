@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+import pdb
 
 
 def last_conection(data_filter):
@@ -22,14 +23,11 @@ def last_conection(data_filter):
     }
     date_start = input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
     date_end = input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
-
     patron_start = re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
     patron_end = re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
 
-    if patron_start.match(date_start) and patron_end.match(date_end):
+    if (patron_start.match(date_start) and patron_end.match(date_end)) and (date_start <= date_end):
         print('Fecha de inicio y fin correctas')
-        
-           
         while correcto is True:
             rta2 = input(' Desea ver:\n\
                         1. los usuarios que han iniciado y finalizado su conexión en el intervalo de tiempo \n\
@@ -58,18 +56,18 @@ def last_conection(data_filter):
                     10: Session_Time
                     11: MAC_AP
                     12: MAC_Cliente
-                    E: Salir ''')
+                    E: Salir\nRespuesta:  ''')
             if columnas_a_aniadir in opciones_columnas.keys():
                 lista_columnas.append(opciones_columnas[columnas_a_aniadir])
             else:
                 seguir = False
-        data_filter_finally = data_filter[lista_columnas]
+        data_filter_finally = (data_filter[lista_columnas])
         print('\n')
         print(data_filter_finally)
         print('\n')
         export(data_filter_finally)
     else:
-        print('Fecha de inicio y/o fin incorrectas')
+        print('Fecha de inicio y/o fin incorrectas, volver a intentar')
         last_conection(data_filter)
 
 
@@ -78,13 +76,38 @@ def export(data_filter_finally):
     if rta == 'y':
         rta1 = input('Desea exportar los datos en formato CSV o Excel? (CSV/Excel):').lower()
         if rta1 == 'csv':
-            ruta_csv = './TP5v2/export/last_conection.csv'
+            nombre_archivo = input('Nombre del archvo: ')
+            ruta_csv = f'./TP5v2/export/{nombre_archivo}.csv'
             data_filter_finally.to_csv(ruta_csv, index=False)
         if rta1 == 'excel':
-            ruta_excel = './TP5v2/export/last_conection.xlsx'
+            nombre_archivo = input('Nombre del archvo: ')
+            ruta_excel = f'./TP5v2/export/{nombre_archivo}.xlsx'
             data_filter_finally.to_excel(ruta_excel, index=False)
     else:
         print('Gracias por usar el programa')
+
+def guardar_DataFrame1(dataframe):
+    pd.set_option('display.width', None)  # Desactivar el ajuste automático del ancho
+    pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
+
+    # Guardar el DataFrame en un archivo CSV
+    dataframe.to_csv('./TP5v2/export/errores.csv', index=False)
+
+    # Restaurar la configuración predeterminada de Pandas
+    pd.reset_option('display.width')
+    pd.reset_option('display.max_columns')
+
+def guardar_DataFrame2(dataframe):
+    pd.set_option('display.width', None)  # Desactivar el ajuste automático del ancho
+    pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
+
+    # Guardar el DataFrame en un archivo CSV
+    dataframe.to_csv('./TP5v2/export/ubicacion_errores.csv', index=False)
+
+    # Restaurar la configuración predeterminada de Pandas
+    pd.reset_option('display.width')
+    pd.reset_option('display.max_columns')
+    
 
 
 expresiones_regulares = {
@@ -100,26 +123,42 @@ expresiones_regulares = {
     'Session_Time': r'^\d+(\.\d+)?$',
     'MAC_AP':  r'^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}:HCDD$',
     'MAC_Cliente': r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
-    # Razon de terminacion de sesioncon
 }
 
 csv_file = './TP5v2/file/export-2019-to-now-v4.csv'
 data = pd.read_csv(csv_file, low_memory=False, usecols=expresiones_regulares.keys())
 
 data_filter = data
+data_filter_erronea = pd.DataFrame()  # Crear un DataFrame vacío para almacenar los datos filtrados
+ubicacion_errores = pd.DataFrame()
+
 for columna, patron in expresiones_regulares.items():
     regex = re.compile(patron)
     data_filter = data_filter[data_filter[columna].astype(str).str.match(regex)]
-# print(data_filter
+    
+    filter_mask = data[columna].astype(str).str.match(regex)  # Máscara booleana para los valores que cumplen con la expresión regular
+    ubicacion_errores = ubicacion_errores._append(filter_mask)  # Agregar los datos filtrados al DataFrame
+    
+    filtered_data = data[~filter_mask]  # Usar ~ para negar la máscara y obtener los valores que no cumplen
+    data_filter_erronea = data_filter_erronea._append(filtered_data)  # Agregar los datos filtrados al DataFrame
+
+ubicacion_errores = ubicacion_errores.T
+
+data_filter_correcta = data_filter
+# print(data_filter_correcta)
+# print(data_filter_erronea)
+# print(ubicacion_errores)
 continuar = True
 while continuar is True:
     last_conection(data_filter)
-    rta3 = input('¿Desea volver a consultar? (Y/N)').lower()
+    guardar_DataFrame1(data_filter_erronea)
+    guardar_DataFrame2(ubicacion_errores)
+    rta3 = input('¿Desea volver a consultar? (Y/N):\nRespuesta: ').lower()
     if rta3 == 'y':
         pass
     elif rta3 == 'n':
         continuar = False
     else:
-        print('Opción incorrecta, volver a ingresar')
+        print(' Opción incorrecta, volver a ingresar')
+    
 
-print('No vimo conshesumare')

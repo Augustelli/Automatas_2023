@@ -35,6 +35,7 @@ class TestPrueba(unittest.TestCase):
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-04-01'), True)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-04-02'), True)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019-05-14'), True)
+        self.assertEqual(validacion_inicio_de_conexion_dia('2021-01-11'), True)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019/04-02'), False)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019\05\14'), False)
         self.assertEqual(validacion_inicio_de_conexion_dia('2019/04/31'), False)
