@@ -1,4 +1,4 @@
-from prueba import *
+from expresiones_regulares import *
 import unittest
 from parameterized import parameterized
 

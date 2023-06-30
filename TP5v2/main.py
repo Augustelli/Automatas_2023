@@ -4,7 +4,6 @@ import re
 
 csv_file = './TP5v2/file/export-2019-to-now-v4.csv'
 data = pd.read_csv(csv_file, low_memory=False, usecols=expresiones_regulares.keys())
-continuar = True
 
 data_filter = data
 data_total = data
@@ -34,18 +33,24 @@ ubicacion_errores_final = ubicacion_errores.loc[~(ubicacion_errores==True).all(a
 numero_fila = ubicacion_errores_final.index
 
 tabla_errores = data_total[data_total.index.isin(numero_fila)]
+
 tabla1=tabla_errores.reset_index(drop=True)
 tabla2=ubicacion_errores_final.reset_index(drop=True)
 tabla_unida_errores = pd.concat([tabla1, tabla2], axis=1)
 
+
+continuar = True
 while continuar is True:
     last_conection(data_filter_correcta)
-    guardar_DataFrame(tabla_unida_errores)
-    rta3 = input('¿Desea volver a consultar? (Y/N):\nRespuesta: ').lower()
-    if rta3 == 'y':
+    rta4 = input('Desea guardar los errores encontrados en un archivo? (Y/N): ').lower()
+    if rta4 == 'y':
+        guardar_DataFrame(tabla_unida_errores)
+
+    rta7 = input('¿Desea volver a consultar? (Y/N):\nRespuesta: ').lower()
+    if rta7 == 'y':
         pass
-    elif rta3 == 'n':
+    elif rta7 == 'n':
         continuar = False
     else:
         print(' Opción incorrecta, volver a ingresar')
-        
+    
