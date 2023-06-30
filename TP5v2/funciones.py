@@ -1,6 +1,5 @@
 import re
 import pandas as pd
-import pdb
 
 
 def last_conection(data_filter):
@@ -23,8 +22,8 @@ def last_conection(data_filter):
     }
     date_start = input('Ingrese la fecha de inicio de la busqueda (YYYY-MM-DD): ')
     date_end = input('Ingrese la fecha de fin de la busqueda (YYYY-MM-DD): ')
-    patron_start = re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
-    patron_end = re.compile(r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$')
+    patron_start = re.compile(r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$')
+    patron_end = re.compile(r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$')
 
     if (patron_start.match(date_start) and patron_end.match(date_end)) and (date_start <= date_end):
         print('Fecha de inicio y fin correctas')
@@ -86,39 +85,31 @@ def export(data_filter_finally):
     else:
         print('Gracias por usar el programa')
 
-def guardar_DataFrame1(dataframe):
+
+def guardar_DataFrame(dataframe):
     pd.set_option('display.width', None)  # Desactivar el ajuste automático del ancho
     pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
 
-    # Guardar el DataFrame en un archivo CSV
-    dataframe.to_csv('./TP5v2/export/errores.csv', index=False)
-
-    # Restaurar la configuración predeterminada de Pandas
-    pd.reset_option('display.width')
-    pd.reset_option('display.max_columns')
-
-def guardar_DataFrame2(dataframe):
-    pd.set_option('display.width', None)  # Desactivar el ajuste automático del ancho
-    pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
-
-    # Guardar el DataFrame en un archivo CSV
-    dataframe.to_csv('./TP5v2/export/ubicacion_errores.csv', index=False)
-
-    # Restaurar la configuración predeterminada de Pandas
-    pd.reset_option('display.width')
-    pd.reset_option('display.max_columns')
+    rta5 = input('Desea exportar los datos en formato CSV o Excel? (CSV/Excel):').lower()
+    if rta5 == 'csv':
+            nombre_archivo = input('Nombre del archvo para los errores: ')
+            ruta_csv = f'./TP5v2/export/{nombre_archivo}.csv'
+            dataframe.to_csv(ruta_csv, index=False)
+    if rta5 == 'excel':
+            nombre_archivo = input('Nombre del archvo que contiene los errores: ')
+            ruta_excel = f'./TP5v2/export/{nombre_archivo}.xlsx'
+            dataframe.to_excel(ruta_excel, index=False)
     
-
 
 expresiones_regulares = {
     'ID': r'^\d{6,7}$',
     'ID_Sesion': r'^[A-F0-9]{8}-[A-F0-9]{8}$',
     'ID_Conexión_unico': r'^[a-f0-9]{16}$',
-    'Usuario': r'^[a-zA-Z-]{3,25}$',
-    'IP_NAS_AP': r'^192\.168\.247\.[0-9]{2}$',
-    'Inicio_de_Conexión_Dia': r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$',
+    'Usuario': r'^[a-zA-Z.-]{3,25}$',
+    'IP_NAS_AP': r'^((?:192\.168\.247\.[0-9]{2})|(?:192\.168\.1\.20))$',
+    'Inicio_de_Conexión_Dia': r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$',
     'Inicio_de_Conexión_Hora': r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$',
-    'FIN_de_Conexión_Dia': r'^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8]|3[01])$',
+    'FIN_de_Conexión_Dia': r'^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$',
     'FIN_de_Conexión_Hora': r'^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$',
     'Session_Time': r'^\d+(\.\d+)?$',
     'MAC_AP':  r'^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}:HCDD$',
@@ -129,36 +120,56 @@ csv_file = './TP5v2/file/export-2019-to-now-v4.csv'
 data = pd.read_csv(csv_file, low_memory=False, usecols=expresiones_regulares.keys())
 
 data_filter = data
+data_total = data
 data_filter_erronea = pd.DataFrame()  # Crear un DataFrame vacío para almacenar los datos filtrados
 ubicacion_errores = pd.DataFrame()
 
+
+# Devuelve los valores correctos junto a donde se encuentran los errores (TRue , False) -> Todos
 for columna, patron in expresiones_regulares.items():
     regex = re.compile(patron)
-    data_filter = data_filter[data_filter[columna].astype(str).str.match(regex)]
+    data_filter = data_filter[data_filter[columna].astype(str).str.match(regex)]  # Listo
     
     filter_mask = data[columna].astype(str).str.match(regex)  # Máscara booleana para los valores que cumplen con la expresión regular
     ubicacion_errores = ubicacion_errores._append(filter_mask)  # Agregar los datos filtrados al DataFrame
     
+data_filter_correcta = data_filter
+
+for columna, patron in expresiones_regulares.items():
     filtered_data = data[~filter_mask]  # Usar ~ para negar la máscara y obtener los valores que no cumplen
     data_filter_erronea = data_filter_erronea._append(filtered_data)  # Agregar los datos filtrados al DataFrame
 
-ubicacion_errores = ubicacion_errores.T
 
-data_filter_correcta = data_filter
-# print(data_filter_correcta)
-# print(data_filter_erronea)
-# print(ubicacion_errores)
+ubicacion_errores = ubicacion_errores.T
+        
+ubicacion_errores_final = ubicacion_errores.loc[~(ubicacion_errores==True).all(axis=1)]
+
+numero_fila = ubicacion_errores_final.index
+# print(numero_fila)
+
+tabla_errores = data_total[data_total.index.isin(numero_fila)]
+
+tabla1=tabla_errores.reset_index(drop=True)
+tabla2=ubicacion_errores_final.reset_index(drop=True)
+tabla_unida_errores = pd.concat([tabla1, tabla2], axis=1)
+print(len(tabla_unida_errores))
+print(len(data_filter_correcta))
+if len(tabla_unida_errores) + len(data_filter_correcta) == len(data_total):
+    print('La suma de los datos correctos y los datos erroneos es igual a la cantidad de datos totales')
+
+
 continuar = True
 while continuar is True:
-    last_conection(data_filter)
-    guardar_DataFrame1(data_filter_erronea)
-    guardar_DataFrame2(ubicacion_errores)
-    rta3 = input('¿Desea volver a consultar? (Y/N):\nRespuesta: ').lower()
-    if rta3 == 'y':
+    last_conection(data_filter_correcta)
+    rta4 = input('Desea guardar los errores encontrados en un archivo? (Y/N): ').lower()
+    if rta4 == 'y':
+        guardar_DataFrame(tabla_unida_errores)
+
+    rta7 = input('¿Desea volver a consultar? (Y/N):\nRespuesta: ').lower()
+    if rta7 == 'y':
         pass
-    elif rta3 == 'n':
+    elif rta7 == 'n':
         continuar = False
     else:
         print(' Opción incorrecta, volver a ingresar')
     
-
