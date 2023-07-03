@@ -1,8 +1,13 @@
 from funciones import expresiones_regulares, guardar_DataFrame, last_conection
 import pandas as pd
 import re
+from tqdm import tqdm
 
-csv_file = './TP5v2/file/export-2019-to-now-v4.csv'
+
+total_iterations = len(expresiones_regulares) * 2  # Total de iteraciones en el bucle
+
+progress_bar = tqdm(total=total_iterations, desc="Leyendo y analizado archivos", unit="iter")
+csv_file = 'export-2019-to-now-v4.csv'
 data = pd.read_csv(csv_file, low_memory=False, usecols=expresiones_regulares.keys())
 
 data_filter = data
@@ -12,18 +17,24 @@ ubicacion_errores = pd.DataFrame()
 
 
 # Devuelve los valores correctos junto a donde se encuentran los errores (TRue , False) -> Todos
+
 for columna, patron in expresiones_regulares.items():
     regex = re.compile(patron)
-    data_filter = data_filter[data_filter[columna].astype(str).str.match(regex)]  # Listo
-    
-    filter_mask = data[columna].astype(str).str.match(regex)  # Máscara booleana para los valores que cumplen con la expresión regular
-    ubicacion_errores = ubicacion_errores._append(filter_mask)  # Agregar los datos filtrados al DataFrame
-    
+    data_filter = data_filter[data_filter[columna].astype(str).str.match(regex)]
+
+    filter_mask = data[columna].astype(str).str.match(regex)
+    ubicacion_errores = ubicacion_errores._append(filter_mask)
+
+    progress_bar.update(1)  # Actualizar la barra de progreso
+
 data_filter_correcta = data_filter
 
 for columna, patron in expresiones_regulares.items():
-    filtered_data = data[~filter_mask]  # Usar ~ para negar la máscara y obtener los valores que no cumplen
-    data_filter_erronea = data_filter_erronea._append(filtered_data)  # Agregar los datos filtrados al DataFrame
+    filtered_data = data[~filter_mask]
+    data_filter_erronea = data_filter_erronea._append(filtered_data)
+
+    progress_bar.update(1)  # Actualizar la barra de progreso
+
 
 
 ubicacion_errores = ubicacion_errores.T
@@ -38,11 +49,12 @@ tabla1=tabla_errores.reset_index(drop=True)
 tabla2=ubicacion_errores_final.reset_index(drop=True)
 tabla_unida_errores = pd.concat([tabla1, tabla2], axis=1)
 
+progress_bar.close()  # Cerrar la barra de progreso al finalizar
 
 continuar = True
 while continuar is True:
     last_conection(data_filter_correcta)
-    rta4 = input('Desea guardar los errores encontrados en un archivo? (Y/N): ').lower()
+    rta4 = input('¿Desea guardar los errores encontrados en un archivo? (Y/N): ').lower()
     if rta4 == 'y':
         guardar_DataFrame(tabla_unida_errores)
 

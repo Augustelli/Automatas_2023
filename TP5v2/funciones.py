@@ -76,11 +76,11 @@ def export(data_filter_finally):
         rta1 = input('Desea exportar los datos en formato CSV o Excel? (CSV/Excel):').lower()
         if rta1 == 'csv':
             nombre_archivo = input('Nombre del archvo: ')
-            ruta_csv = f'./TP5v2/export/{nombre_archivo}.csv'
+            ruta_csv = f'./export/{nombre_archivo}.csv'
             data_filter_finally.to_csv(ruta_csv, index=False)
         if rta1 == 'excel':
             nombre_archivo = input('Nombre del archvo: ')
-            ruta_excel = f'./TP5v2/export/{nombre_archivo}.xlsx'
+            ruta_excel = f'./export/{nombre_archivo}.xlsx'
             data_filter_finally.to_excel(ruta_excel, index=False)
     else:
         print('Gracias por usar el programa')
@@ -89,14 +89,10 @@ def export(data_filter_finally):
 def guardar_DataFrame(dataframe):
     pd.set_option('display.width', None)  # Desactivar el ajuste automático del ancho
     pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
+    nombre_archivo = input('Nombre del archvo para los errores: ')
+    ruta_csv = f'./export/{nombre_archivo}.csv'
+    dataframe.to_csv(ruta_csv, index=False)
 
-    rta5 = input('Desea exportar los datos en formato CSV? (Y/N)').lower()
-    if rta5 == 'y':
-            nombre_archivo = input('Nombre del archvo para los errores: ')
-            ruta_csv = f'./TP5v2/export/{nombre_archivo}.csv'
-            dataframe.to_csv(ruta_csv, index=False)
-    else:
-        pass
     
 
 expresiones_regulares = {
